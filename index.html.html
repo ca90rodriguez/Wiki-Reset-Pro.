@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WikiReset Pro | Guías de Soporte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f1f5f9; color: #1e293b; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 700px; padding: 20px; box-sizing: border-box; }
+        
+        /* BANNER BRANDING */
+        .brand-header { 
+            width: 100%; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); 
+            padding: 50px 20px; text-align: center; color: white; margin-bottom: -40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .brand-logo { font-size: 2.8rem; font-weight: 800; margin: 0; letter-spacing: -1px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .brand-logo span { color: #60a5fa; font-weight: 300; }
+        .brand-tagline { font-size: 14px; opacity: 0.8; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
+
+        .search-container { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 25px; position: relative; z-index: 10; }
+        .search-box { position: relative; }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .search-box input { width: 100%; padding: 12px 12px 12px 45px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; outline: none; box-sizing: border-box; }
+        
+        .result-card { background: #fff; border-radius: 15px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border-left: 6px solid #2563eb; }
+        .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; color: #0f172a; }
+        .steps-box { background: #f8fafc; padding: 18px; border-radius: 12px; font-size: 15px; line-height: 1.7; white-space: pre-wrap; margin-bottom: 15px; border: 1px solid #f1f5f9; color: #334155; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000; }
+        .video-container iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:0; }
+        
+        .btn-copy { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; transition: 0.2s; color: #1e293b; }
+        .btn-copy:hover { background: #2563eb; color: white; border-color: #2563eb; transform: translateY(-2px); }
+        
+        #toast { visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 50px; font-weight: 600; box-shadow: 0 10px 15px rgba(0,0,0,0.2); z-index: 1000; }
+        .show { visibility: visible !important; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; bottom: 10px; } to { opacity: 1; bottom: 30px; } }
+    </style>
+</head>
+<body>
+    <div class="brand-header">
+        <h1 class="brand-logo">WikiReset <span>Pro</span></h1>
+        <div class="brand-tagline">Central de Guías Técnicas</div>
+    </div>
+    <div class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="¿Qué equipo buscas hoy?..." onkeyup="filtrar()">
+            </div>
+        </div>
+        <div id="resultsArea"></div>
+    </div>
+    <div id="toast"><i class="fas fa-check-circle"></i> Guía copiada correctamente</div>
+    <script>
+        const db = [{"id":1772160817165,"nombre":"Samsung Galaxy M55 5G","pasos":"Para restablecer un Samsung Galaxy M55 5G utilizando los botones físicos (Hard Reset), es importante que sepas que en los modelos actuales de Samsung es necesario conectar el equipo a una computadora mediante el cable USB para que el menú de recuperación se active.\n\n\n\n\nEste es el procedimiento estándar para acceder al modo Recovery:\n\n1. Apaga el teléfono y conéctalo a una PC o TV con el cable USB.\n\n2. Mantén presionados los botones de Encendido y Subir Volumen simultáneamente hasta que aparezca el logo de Samsung.\n\n3. Una vez en el menú negro con letras azules/amarillas, usa los botones de volumen para bajar hasta \"Wipe data/factory reset\".\n\n4. Presiona el botón de Encendido, baja a \"Factory data reset\" y confirma nuevamente. Finalmente, selecciona \"Reboot system now\".\n\nTutorial que muestra cómo navegar por el menú para limpiar el dispositivo por completo.\nURL: https://www.youtube.com/watch?v=Gs8hDtPCoAQ","videoID":"Gs8hDtPCoAQ"}];
+        window.onload = () => renderizar(db);
+        function renderizar(lista) {
+            const area = document.getElementById('resultsArea'); area.innerHTML = '';
+            if(lista.length === 0) { area.innerHTML = '<p style="text-align:center;color:gray;margin-top:40px;">No se encontraron resultados.</p>'; return; }
+            lista.forEach(item => {
+                const v = item.videoID ? '<div class="video-container"><iframe src="https://www.youtube.com/embed/'+item.videoID+'" allowfullscreen></iframe></div>' : '';
+                area.innerHTML += '<div class="result-card"><div class="card-title">'+item.nombre+'</div><div class="steps-box" id="t-'+item.id+'">'+item.pasos+'</div>'+v+'<button class="btn-copy" onclick="copiar('+item.id+')"><i class="fas fa-copy"></i> Copiar Guía</button></div>';
+            });
+        }
+        function filtrar() { const q = document.getElementById('searchInput').value.toLowerCase(); renderizar(db.filter(i => i.nombre.toLowerCase().includes(q))); }
+        function copiar(id) { const txt = document.getElementById('t-'+id).innerText; navigator.clipboard.writeText(txt).then(() => { const t = document.getElementById("toast"); t.className = "show"; setTimeout(() => t.className = "", 3000); }); }
+    </script>
+</body>
+</html>
